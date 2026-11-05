@@ -1,0 +1,31 @@
+[package]
+name = "web_mev_runtime"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+description = "Process plumbing for web apps: logging, fatal errors, panic hook, shutdown signal, background workers"
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
+
+[features]
+# Daily rolling log files beside stdout.
+rolling-file = ["dep:tracing-appender"]
+
+[dependencies]
+dotenvy.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["macros", "rt", "signal", "sync", "time"] }
+tracing.workspace = true
+tracing-appender = { workspace = true, optional = true }
+tracing-subscriber.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "test-util"] }

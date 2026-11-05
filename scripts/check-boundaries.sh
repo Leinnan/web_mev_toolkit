@@ -35,6 +35,23 @@ for manifest in crates/*/Cargo.toml; do
     known="$known $crate"
 done
 
+# Each crate's "must not depend on" list.
+web_stack='axum|axum-core|hyper|tower-http'
+# crate: web_mev_core
+forbid web_mev_core "$web_stack|sqlx|tera|reqwest|tokio" "$(tree web_mev_core)"
+forbid "web_mev_core (all features)" "$web_stack|sqlx|tera|reqwest" "$(tree web_mev_core --all-features)"
+# crate: web_mev_runtime
+forbid web_mev_runtime "$web_stack|sqlx|tera|reqwest" "$(tree web_mev_runtime --all-features)"
+# crate: web_mev_sqlite
+forbid web_mev_sqlite "$web_stack|tera|reqwest" "$(tree web_mev_sqlite --all-features)"
+# crate: web_mev_test
+
+# Positive control: the checks above see what they look for.
+if ! tree web_mev_sqlite | grep -qx sqlx; then
+    printf 'control failed: sqlx not found in the web_mev_sqlite tree\n' >&2
+    failed=1
+fi
+
 # Nothing depends on the test crate outside dev-dependencies.
 for crate in $known; do
     if [[ "$crate" != web_mev_test ]]; then

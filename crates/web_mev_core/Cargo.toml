@@ -1,0 +1,34 @@
+[package]
+name = "web_mev_core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+description = "Framework-free helpers for web apps: tokens, clock, env parsing, client IP, validators, password hashing"
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
+
+[features]
+# Bounded Argon2 hashing; pulls in tokio for its worker pool.
+password = ["dep:argon2", "dep:tokio"]
+
+[dependencies]
+argon2 = { workspace = true, optional = true }
+base64.workspace = true
+rand.workspace = true
+sha2.workspace = true
+subtle.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tokio = { workspace = true, optional = true, features = ["rt", "sync"] }
+url.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
