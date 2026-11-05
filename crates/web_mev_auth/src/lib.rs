@@ -54,7 +54,9 @@ pub mod store;
 pub use extract::{
     AnonForm, ApiSession, CSRF_HEADER, CsrfForm, EmptyForm, OptionalSession, UiSession,
 };
-pub use schema::{REFERENCE_SQL, SchemaError, verify_schema};
+pub use schema::{
+    ADOPT_AUDIT_COLUMNS_SQL, ADOPT_SESSION_IDS_SQL, REFERENCE_SQL, SchemaError, verify_schema,
+};
 pub use store::{
     AuthConfig, AuthError, Authenticated, IssuedSession, LoginPolicy, Session, SessionStore,
     SessionUser,

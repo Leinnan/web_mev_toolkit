@@ -8,6 +8,12 @@ use sqlx::SqlitePool;
 /// SQL creating the tables, for the app to copy into a migration after `users`.
 pub const REFERENCE_SQL: &str = include_str!("../sql/auth_tables.sql");
 
+/// For adopting apps whose `sessions` table uses `token_hash` as its primary key.
+pub const ADOPT_SESSION_IDS_SQL: &str = include_str!("../sql/adopt_session_ids.sql");
+
+/// For adopting apps whose `audit_log` has `actor_user_id` and `target` columns.
+pub const ADOPT_AUDIT_COLUMNS_SQL: &str = include_str!("../sql/adopt_audit_columns.sql");
+
 /// Column name, type, `NOT NULL`, and position in the primary key.
 type Column = (&'static str, &'static str, bool, i64);
 

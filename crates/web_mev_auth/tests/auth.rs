@@ -16,9 +16,9 @@ use serde_json::json;
 use sqlx::{FromRow, Row, SqlitePool, migrate::Migrator, sqlite::SqliteRow};
 use tower_cookies::{CookieManagerLayer, Cookies};
 use web_mev_auth::{
-    AnonForm, ApiSession, AuthConfig, AuthError, CsrfForm, LoginPolicy, OptionalSession,
-    REFERENCE_SQL, SchemaError, SessionStore, SessionUser, UiSession, audit, session_sql,
-    verify_schema,
+    ADOPT_AUDIT_COLUMNS_SQL, ADOPT_SESSION_IDS_SQL, AnonForm, ApiSession, AuthConfig, AuthError,
+    CsrfForm, LoginPolicy, OptionalSession, REFERENCE_SQL, SchemaError, SessionStore, SessionUser,
+    UiSession, audit, session_sql, verify_schema,
 };
 use web_mev_axum::{
     ErrorSurface, RequestError, WebError, html_error_response, json_error_response,
@@ -362,6 +362,108 @@ async fn schema_check_lists_every_difference() {
     assert!(all.contains("login_throttle.failures is TEXT"), "{all}");
     assert!(all.contains("table bootstrap_lock is missing"), "{all}");
     assert!(all.contains("table audit_log is missing"), "{all}");
+}
+
+/// The klucznik and `oxi_feed` schema, with rows in it, as a real adoption finds it.
+async fn populated_old_schema() -> TestDb {
+    let db = TestDb::new(&DELETED_AT).await.unwrap();
+    sqlx::raw_sql(
+        "CREATE TABLE sessions (
+            token_hash TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            csrf_token TEXT NOT NULL,
+            expires_at INTEGER NOT NULL,
+            created_at INTEGER NOT NULL DEFAULT (unixepoch())
+         );
+         CREATE INDEX idx_sessions_user ON sessions (user_id);
+         CREATE TABLE login_throttle (
+            identity_hash TEXT PRIMARY KEY,
+            failures INTEGER NOT NULL,
+            locked_until INTEGER,
+            updated_at INTEGER NOT NULL DEFAULT (unixepoch())
+         );
+         CREATE TABLE bootstrap_lock (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            touched_at INTEGER NOT NULL
+         );
+         CREATE TABLE audit_log (
+            id INTEGER PRIMARY KEY,
+            actor_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            action TEXT NOT NULL,
+            target TEXT,
+            details_json TEXT NOT NULL DEFAULT '{}',
+            created_at INTEGER NOT NULL DEFAULT (unixepoch())
+         );
+         INSERT INTO users (id, email, display_name, password_hash)
+            VALUES (1, 'a@b.c', 'A', 'hash');
+         INSERT INTO audit_log (actor_user_id, action, target)
+            VALUES (1, 'user.login', 'user:1');",
+    )
+    .execute(&db.pool)
+    .await
+    .unwrap();
+    sqlx::query(
+        "INSERT INTO sessions (token_hash, user_id, csrf_token, expires_at)
+         VALUES (?, 1, 'old-csrf', 2000000)",
+    )
+    .bind(web_mev_core::token_hash("old-token"))
+    .execute(&db.pool)
+    .await
+    .unwrap();
+    db
+}
+
+#[tokio::test]
+async fn adopting_keeps_sessions_and_audit_history() {
+    let db = populated_old_schema().await;
+    assert!(
+        verify_schema(&db.pool).await.is_err(),
+        "the old shape fails"
+    );
+
+    sqlx::raw_sql(ADOPT_SESSION_IDS_SQL)
+        .execute(&db.pool)
+        .await
+        .unwrap();
+    sqlx::raw_sql(ADOPT_AUDIT_COLUMNS_SQL)
+        .execute(&db.pool)
+        .await
+        .unwrap();
+    verify_schema(&db.pool).await.unwrap();
+
+    let store = SessionStore::new(db.pool.clone(), AuthConfig::new("app", false))
+        .with_clock(FixedClock::at(1_000_000));
+    let cookies = Cookies::default();
+    cookies.add(tower_cookies::Cookie::new("app_session", "old-token"));
+    let session = store.load::<SoftDeleted>(&cookies).await.unwrap().unwrap();
+    assert_eq!(session.user_id, 1);
+    assert_eq!(session.csrf_token, "old-csrf");
+    assert!(
+        session.id > 0,
+        "the old session gained an id to revoke it by"
+    );
+
+    let (user_id, target_id): (i64, String) =
+        sqlx::query_as("SELECT user_id, target_id FROM audit_log")
+            .fetch_one(&db.pool)
+            .await
+            .unwrap();
+    assert_eq!((user_id, target_id.as_str()), (1, "user:1"));
+    audit::record(
+        &db.pool,
+        Some(1),
+        "user.logout",
+        Some("user"),
+        Some("1"),
+        &json!({}),
+    )
+    .await
+    .unwrap();
+
+    let mut tx = write_tx(&db.pool).await.unwrap();
+    drop(store.insert_session(&mut tx, 1).await.unwrap());
+    tx.commit().await.unwrap();
+    assert_eq!(session_count(&db.pool).await, 2);
 }
 
 #[tokio::test]

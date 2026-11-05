@@ -15,6 +15,8 @@ Copies were compared on 2026-11-05. Projects keep moving, so diff again before a
 | `web_mev_net` | oxi_feed: `src/net_policy.rs`, `src/feed/fetch.rs` (`fetch_limited`, now a `SafeClient` method) | |
 | `web_mev_test` | oxi_feed: `tests/common/mod.rs` (`Client`, on-disk WAL database) | zbierak and klucznik: `tests/common/mod.rs` (in-memory pool); that_day: `src/routes/mod.rs` (`ConnectInfo` injection); zbierak: `tests/http_contract.rs` (now `contract`) |
 
+`templates/app` follows `bevy_mev_toolkit`'s `templates/game` in shape. Its Dockerfile, compose file and `.dockerignore` come from oxi_feed, with `stop_grace_period` from that_day. Its CI's `cargo audit` comes from klucznik, and its setup token from klucznik's `bootstrap`, generated and logged when unset. The htmx file is the one all three apps vendor, 2.0.7, and Tailwind is pinned to the 4.3.3 that oxi_feed uses.
+
 ## Bugs fixed while porting
 
 The source projects still have these:
@@ -38,3 +40,5 @@ The source projects still have these:
 - **palumbus `actix_tera_hot_reload`:** a busy lock silently loses a reload, a failed reload is discarded with no message, and handlers can return 500 during a swap. `Templates` builds the new set first, swaps it in only on success and logs failures, and readers keep the set they started with.
 - **oxi_feed `src/web/mod.rs`:** any `?v=` value earns an immutable cache lifetime, so an old URL can pin new content, or a guessed one can pin it for a year. `Assets::respond` only trusts the file's current digest.
 - **oxi_feed `src/assets.rs`:** the first request compresses every file at once on an async worker. `Assets` compresses each file once on first use, off the runtime.
+- **zbierak bootstrap:** the first visitor to reach an empty instance gets the owner account. The starter always requires a setup token, generated and logged when none is set.
+- **zbierak, klucznik and oxi_feed `init_logging`:** a default filter of `my_app=info` hides anything logged by a dependency under its own target. Once these apps use the toolkit, that would include its access log and error reports. The starter's default is `info,sqlx=warn`.
