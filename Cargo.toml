@@ -1,0 +1,39 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+# The starter is generated into its own project, and only checked from there.
+exclude = ["templates"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+# The toolchain pinned by the apps this was extracted from.
+rust-version = "1.98"
+authors = ["Piotr Siuszko"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Leinnan/web_mev_toolkit"
+publish = false
+
+[workspace.dependencies]
+
+# Panics are denied in production code. clippy.toml exempts tests.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+redundant_clone = "warn"
+needless_collect = "warn"
+or_fun_call = "warn"
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+
+# Our crates quick to rebuild, dependencies fast at run time.
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+debug = "line-tables-only"

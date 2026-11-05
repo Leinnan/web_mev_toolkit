@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Installs the channel pinned in rust-toolchain.toml.
+      - run: rustup show active-toolchain || rustup toolchain install
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,cargo-nextest,cargo-generate,cargo-audit
+      - run: cargo metadata --locked --format-version 1 > /dev/null
+      - run: just check
+      - run: just check-alone
+      - run: cargo nextest run --workspace --all-features --profile ci --no-tests pass
+      - run: cargo audit
+      - run: just check-template
