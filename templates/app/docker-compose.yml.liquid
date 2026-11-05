@@ -13,7 +13,7 @@ services:
       {{env_prefix}}_SESSION_DAYS: ${% raw %}{{% endraw %}{{env_prefix}}_SESSION_DAYS:-30}
       {{env_prefix}}_SETUP_TOKEN: ${% raw %}{{% endraw %}{{env_prefix}}_SETUP_TOKEN:-}
       {{env_prefix}}_TRUSTED_PROXIES: ${% raw %}{{% endraw %}{{env_prefix}}_TRUSTED_PROXIES:-}
-      RUST_LOG: ${RUST_LOG:-{{crate_name}}=info}
+      RUST_LOG: ${RUST_LOG:-info,sqlx=warn}
     ports:
       - "${% raw %}{{% endraw %}{{env_prefix}}_PUBLISH_ADDRESS:-127.0.0.1}:8080:8080"
     volumes:

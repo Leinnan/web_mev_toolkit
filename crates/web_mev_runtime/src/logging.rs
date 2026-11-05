@@ -31,7 +31,9 @@ pub struct LogConfig {
 
 impl LogConfig {
     /// Logs to stdout, using `RUST_LOG` when it is set and `default_filter`
-    /// (such as `my_app=info`) otherwise.
+    /// otherwise. Use a filter such as `info,sqlx=warn`, not `my_app=info`: the
+    /// access log and error reports of the `web_mev_*` crates have their own targets,
+    /// and that would hide them.
     #[must_use]
     pub fn new(default_filter: &str) -> Self {
         Self {

@@ -5,7 +5,7 @@
 //! ```ignore
 //! web_mev_runtime::install_panic_hook("my_app");
 //! web_mev_runtime::load_dotenv();
-//! let _logs = web_mev_runtime::init_logging(&LogConfig::new("my_app=info"))?;
+//! let _logs = web_mev_runtime::init_logging(&LogConfig::new("info,sqlx=warn"))?;
 //! if let Err(error) = my_app::run().await {
 //!     web_mev_runtime::report_fatal("my_app", &error);
 //!     std::process::exit(1);
