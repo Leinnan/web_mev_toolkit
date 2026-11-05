@@ -23,6 +23,19 @@ rev="$(git -C "$toolkit" rev-parse HEAD)"
     cargo generate --path "$toolkit/templates/app" --name mev_starter --silent --vcs none \
         --define env_prefix=MEV_STARTER --define toolkit_url="$url" --define toolkit_rev="$rev"
 )
+
+# rustfmt wraps lines by length and sorts imports by name, so formatting must hold
+# whatever the app is called. These only format, so they cost almost nothing.
+for name in x zzz_a_rather_long_application_name_for_checking; do
+    (
+        cd "$work"
+        cargo generate --path "$toolkit/templates/app" --name "$name" --silent --vcs none \
+            --define env_prefix=A_RATHER_LONG_APPLICATION_PREFIX --define toolkit_url="$url" --define toolkit_rev="$rev"
+        cd "$name"
+        cargo fmt --all --check
+    )
+done
+
 cd "$work/mev_starter"
 
 # Nothing of the template syntax may survive into what a project gets.

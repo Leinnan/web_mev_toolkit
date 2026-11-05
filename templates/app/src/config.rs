@@ -51,7 +51,8 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             listen_addr: SocketAddr::from(([127, 0, 0, 1], 8080)),
-            database_url: "sqlite://data/{{project-name}}.db?mode=rwc".to_owned(),
+            database_url: concat!("sqlite://data/", env!("CARGO_PKG_NAME"), ".db?mode=rwc")
+                .to_owned(),
             cookie_secure: false,
             session_days: 30,
             setup_token: None,

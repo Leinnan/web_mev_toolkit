@@ -26,7 +26,7 @@ use crate::{
 };
 
 /// Cookie names start with this.
-const COOKIE_PREFIX: &str = "{{crate_name}}";
+const COOKIE_PREFIX: &str = env!("CARGO_CRATE_NAME");
 
 static TEMPLATES: Dir = include_dir!("$CARGO_MANIFEST_DIR/src/templates");
 static STATIC: Dir = include_dir!("$CARGO_MANIFEST_DIR/src/static");
@@ -168,7 +168,7 @@ impl AppState {
     #[must_use]
     pub fn page_context(&self, locale: &LocaleCode, cookies: &Cookies) -> Context {
         let mut context = Context::new();
-        context.insert("app_name", "{{project-name}}");
+        context.insert("app_name", env!("CARGO_PKG_NAME"));
         context.insert("locale", &locale.code());
         let languages: Vec<LanguageChoice> = self
             .i18n

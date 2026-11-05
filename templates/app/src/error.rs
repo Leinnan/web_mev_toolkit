@@ -147,7 +147,7 @@ fn error_page(page: &ErrorPage) -> String {
 </body>
 </html>"#,
         code = page.status.as_u16(),
-        app = escape_html("{{project-name}}"),
+        app = escape_html(env!("CARGO_PKG_NAME")),
         heading = page.heading,
         message = page.message,
     )

@@ -1,4 +1,4 @@
-//! The `{{project-name}}` web app.
+//! The web app.
 
 pub mod config;
 pub mod error;
@@ -32,11 +32,8 @@ const PRUNE_INTERVAL: Duration = Duration::from_hours(1);
 /// opened or doesn't match, or the listener can't start.
 pub async fn run() -> AppResult<()> {
     let config = Config::from_env(&Env::system("{{env_prefix}}_"))?;
-    tracing::info!(
-        ?config,
-        "starting {{project-name}} {}",
-        env!("CARGO_PKG_VERSION")
-    );
+    let (name, version) = (env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+    tracing::info!(?config, "starting {name} {version}");
     let state = AppState::open(config).await?;
     if state.store.needs_bootstrap::<user::User>().await? {
         // There is no account yet, so this is the only way to create one.

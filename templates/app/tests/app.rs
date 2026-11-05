@@ -2,8 +2,9 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
 
 use axum::{Router, http::Method, http::StatusCode};
-use {{crate_name}}::{AppState, Config, MIGRATOR, routes::router};
 use web_mev_test::{Client, TestDb, contract};
+
+use {{crate_name}}::{AppState, Config, MIGRATOR, routes::router};
 
 const SETUP_TOKEN: &str = "test-setup-token";
 const EMAIL: &str = "ann@example.com";
