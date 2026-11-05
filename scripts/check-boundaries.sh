@@ -48,11 +48,25 @@ forbid web_mev_sqlite "$web_stack|tera|reqwest" "$(tree web_mev_sqlite --all-fea
 forbid web_mev_axum 'tera|sqlx|brotli|reqwest' "$(tree web_mev_axum --all-features)"
 # crate: web_mev_auth
 forbid web_mev_auth 'tera|reqwest|brotli' "$(tree web_mev_auth --all-features)"
+# crate: web_mev_templates
+forbid web_mev_templates "$web_stack|sqlx|reqwest" "$(tree web_mev_templates --all-features)"
+# crate: web_mev_i18n
+forbid web_mev_i18n "$web_stack|sqlx|tera|reqwest|bevy" "$(tree web_mev_i18n --all-features)"
+# crate: web_mev_net
+# reqwest itself uses tower-http and hyper on the client side, so those are fine.
+forbid web_mev_net 'axum|axum-core|sqlx|tera' "$(tree web_mev_net --all-features)"
+# crate: web_mev_assets
+forbid web_mev_assets "$web_stack|tokio|sqlx|tera|reqwest" "$(tree web_mev_assets)"
+forbid "web_mev_assets (all features)" 'sqlx|tera|reqwest' "$(tree web_mev_assets --all-features)"
 # crate: web_mev_test
 
 # Positive control: the checks above see what they look for.
 if ! tree web_mev_sqlite | grep -qx sqlx; then
     printf 'control failed: sqlx not found in the web_mev_sqlite tree\n' >&2
+    failed=1
+fi
+if ! tree web_mev_assets --all-features | grep -qx axum; then
+    printf 'control failed: axum not found in the web_mev_assets tree with features\n' >&2
     failed=1
 fi
 

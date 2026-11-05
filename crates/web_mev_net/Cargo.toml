@@ -1,0 +1,27 @@
+[package]
+name = "web_mev_net"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+description = "Outbound HTTP that refuses private destinations, with manual redirects and size limits"
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
+
+[dependencies]
+httpdate.workspace = true
+reqwest.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["net"] }
+url.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+wiremock.workspace = true

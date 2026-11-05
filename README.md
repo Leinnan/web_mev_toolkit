@@ -8,6 +8,10 @@ Crates shared by Rust web apps on axum 0.8, Tera 2 and sqlx 0.9 with SQLite.
 | `web_mev_runtime` | Process plumbing: logging, fatal error reports, panic hook, shutdown signal, background workers |
 | `web_mev_sqlite` | SQLite pool setup and tuning, write transactions, busy detection, readiness, stored secrets |
 | `web_mev_axum` | The HTTP layer: error surfaces, extractors, security headers, access log, rate limits, health routes, flash, htmx helpers |
+| `web_mev_templates` | Tera 2 from embedded or directory sources, shared filters, hot reload behind `reload` |
+| `web_mev_assets` | Embedded static files with digest URLs and lazy compression, with an axum handler behind `axum` |
+| `web_mev_i18n` | CSV translation tables, plural rules, locale negotiation |
+| `web_mev_net` | Outbound HTTP that refuses private destinations, with manual redirects and size limits |
 | `web_mev_auth` | Browser sessions, CSRF, login throttle, first-run bootstrap and audit log, on the app's own `users` table |
 | `web_mev_test` | Test helpers, used as a dev-dependency: browser-like client, HTTP contract checks, test databases |
 

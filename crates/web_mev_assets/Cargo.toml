@@ -1,0 +1,32 @@
+[package]
+name = "web_mev_assets"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+description = "Embedded static files with digest URLs and precompression, and an optional axum handler"
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
+
+[features]
+# Serving files from an axum handler.
+axum = ["dep:axum", "dep:tokio"]
+
+[dependencies]
+axum = { workspace = true, optional = true }
+blake3.workspace = true
+brotli.workspace = true
+flate2.workspace = true
+include_dir.workspace = true
+tokio = { workspace = true, optional = true, features = ["fs", "rt"] }
+
+[dev-dependencies]
+tempfile.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

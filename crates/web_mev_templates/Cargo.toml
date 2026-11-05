@@ -1,0 +1,32 @@
+[package]
+name = "web_mev_templates"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+description = "Tera 2 setup for web apps: embedded or directory sources, shared filters, hot reload"
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
+
+[features]
+# Watches a directory source and swaps templates in when they parse.
+reload = ["dep:notify"]
+
+[dependencies]
+include_dir.workspace = true
+notify = { workspace = true, optional = true }
+tera.workspace = true
+thiserror.workspace = true
+time.workspace = true
+tracing.workspace = true
+web_mev_core.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
