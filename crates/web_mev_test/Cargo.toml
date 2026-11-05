@@ -16,8 +16,13 @@ doctest = false
 workspace = true
 
 [dependencies]
+axum.workspace = true
+http-body-util.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_urlencoded.workspace = true
 sqlx.workspace = true
 tempfile.workspace = true
-thiserror.workspace = true
 web_mev_core.workspace = true
+tower = { workspace = true, features = ["util"] }
 web_mev_sqlite.workspace = true

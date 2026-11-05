@@ -1,0 +1,33 @@
+[package]
+name = "web_mev_axum"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+description = "The HTTP layer for axum apps: error surfaces, extractors, security headers, access log, rate limits, health routes, flash, htmx helpers"
+
+[lib]
+doctest = false
+
+[lints]
+workspace = true
+
+[dependencies]
+axum.workspace = true
+base64.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_urlencoded.workspace = true
+tokio = { workspace = true, features = ["net"] }
+tower-cookies.workspace = true
+tracing.workspace = true
+web_mev_core.workspace = true
+
+[dev-dependencies]
+thiserror.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "test-util"] }
+tracing-subscriber.workspace = true
+web_mev_test.workspace = true

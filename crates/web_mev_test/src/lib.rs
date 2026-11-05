@@ -1,7 +1,20 @@
 //! Test helpers for web apps. Use as a dev-dependency only.
+//!
+//! These fail loudly: a helper that can't do its job panics, which fails the
+//! test calling it.
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    clippy::panic,
+    clippy::missing_panics_doc
+)]
+
+pub mod client;
+pub mod contract;
 
 use std::str::FromStr;
 
+pub use client::{Client, TestResponse};
 use sqlx::{
     SqlitePool,
     migrate::Migrator,

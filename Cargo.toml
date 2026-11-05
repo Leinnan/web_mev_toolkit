@@ -16,11 +16,14 @@ publish = false
 
 [workspace.dependencies]
 argon2 = "0.6"
+axum = "0.8"
 base64 = "0.23"
 dotenvy = "0.15"
+http-body-util = "0.1"
 rand = "0.10"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+serde_urlencoded = "0.7"
 sha2 = "0.11"
 sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio", "sqlite", "migrate"] }
 subtle = "2.6"
@@ -28,11 +31,14 @@ tempfile = "3"
 thiserror = "2"
 time = { version = "0.3", features = ["formatting", "parsing", "macros"] }
 tokio = "1"
+tower = "0.5"
+tower-cookies = "0.11"
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 url = "2"
 
+web_mev_axum = { path = "crates/web_mev_axum" }
 web_mev_core = { path = "crates/web_mev_core" }
 web_mev_runtime = { path = "crates/web_mev_runtime" }
 web_mev_sqlite = { path = "crates/web_mev_sqlite" }
