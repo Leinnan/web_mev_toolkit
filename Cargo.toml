@@ -38,6 +38,7 @@ tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 url = "2"
 
+web_mev_auth = { path = "crates/web_mev_auth" }
 web_mev_axum = { path = "crates/web_mev_axum" }
 web_mev_core = { path = "crates/web_mev_core" }
 web_mev_runtime = { path = "crates/web_mev_runtime" }

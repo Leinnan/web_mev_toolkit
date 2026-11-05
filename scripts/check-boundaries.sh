@@ -46,6 +46,8 @@ forbid web_mev_runtime "$web_stack|sqlx|tera|reqwest" "$(tree web_mev_runtime --
 forbid web_mev_sqlite "$web_stack|tera|reqwest" "$(tree web_mev_sqlite --all-features)"
 # crate: web_mev_axum
 forbid web_mev_axum 'tera|sqlx|brotli|reqwest' "$(tree web_mev_axum --all-features)"
+# crate: web_mev_auth
+forbid web_mev_auth 'tera|reqwest|brotli' "$(tree web_mev_auth --all-features)"
 # crate: web_mev_test
 
 # Positive control: the checks above see what they look for.

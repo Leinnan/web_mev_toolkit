@@ -1828,6 +1828,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ccf3ec651a847eb01de73ccad15eb7d99f80485de043efb2f370cd654f4ea44b"
 
 [[package]]
+name = "web_mev_auth"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
+ "sqlx",
+ "thiserror",
+ "tokio",
+ "tower-cookies",
+ "tracing",
+ "web_mev_axum",
+ "web_mev_core",
+ "web_mev_sqlite",
+ "web_mev_test",
+]
+
+[[package]]
 name = "web_mev_axum"
 version = "0.1.0"
 dependencies = [
