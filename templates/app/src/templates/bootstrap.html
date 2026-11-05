@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ t(key="bootstrap_title") }}{% endblock title %}
+{% block content %}
+<section class="card mx-auto max-w-sm">
+  <h1 class="text-xl font-semibold">{{ t(key="bootstrap_title") }}</h1>
+  <p class="mt-1 text-sm text-muted">{{ t(key="bootstrap_hint") }}</p>
+  {% if error %}<p class="notice notice-danger mt-4" role="alert">{{ error }}</p>{% endif %}
+  <form class="mt-4 space-y-4" action="/bootstrap" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div>
+      <label class="label" for="setup_token">{{ t(key="field_setup_token") }}</label>
+      <input class="input" id="setup_token" type="password" name="setup_token" autocomplete="off" required autofocus>
+    </div>
+    <div>
+      <label class="label" for="display_name">{{ t(key="field_display_name") }}</label>
+      <input class="input" id="display_name" name="display_name" value="{{ display_name | default(value="") }}" autocomplete="name" required>
+    </div>
+    <div>
+      <label class="label" for="email">{{ t(key="field_email") }}</label>
+      <input class="input" id="email" type="email" name="email" value="{{ email | default(value="") }}" autocomplete="username" required>
+    </div>
+    <div>
+      <label class="label" for="password">{{ t(key="field_password") }}</label>
+      <input class="input" id="password" type="password" name="password" autocomplete="new-password" required>
+    </div>
+    <button class="btn w-full" type="submit">{{ t(key="bootstrap_submit") }}</button>
+  </form>
+</section>
+{% endblock content %}

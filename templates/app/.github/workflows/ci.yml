@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Catches new advisories in dependencies that haven't changed.
+    - cron: "0 6 * * 1"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/toolkit-auth
+        with:
+          token: ${{ secrets.TOOLKIT_READ_TOKEN }}
+      # Installs the channel pinned in rust-toolchain.toml.
+      - run: rustup show active-toolchain || rustup toolchain install
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,cargo-nextest,cargo-audit
+      - run: cargo metadata --locked --format-version 1 > /dev/null
+      - run: just check
+      - run: cargo nextest run --profile ci
+      - run: cargo audit

@@ -1,0 +1,64 @@
+/* Tailwind source for src/static/app.css. Regenerate with `just css`.
+   Only classes found in these files end up in the output. */
+@import "tailwindcss" source(none);
+@source "../src/templates";
+@source "../src/static/app.js";
+@source "../src/error.rs";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  --color-surface: #f6f5f2;
+  --color-panel: #ffffff;
+  --color-ink: #1c1b19;
+  --color-muted: #6b6760;
+  --color-line: #e3e0d9;
+  --color-accent: #1d4ed8;
+  --color-accent-ink: #ffffff;
+  --color-danger: #b91c1c;
+  --color-success: #15803d;
+  --color-warning: #a16207;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #131416;
+    --color-panel: #1b1c1f;
+    --color-ink: #ecebe8;
+    --color-muted: #9b978f;
+    --color-line: #2e2f33;
+    --color-accent: #93b4ff;
+    --color-accent-ink: #10131a;
+    --color-danger: #f87171;
+    --color-success: #4ade80;
+    --color-warning: #facc15;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+  }
+  .btn-quiet {
+    @apply rounded-md px-2 py-1 text-sm text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-accent;
+  }
+  .card {
+    @apply rounded-lg border border-line bg-panel p-6;
+  }
+  .input {
+    @apply mt-1 block w-full rounded-md border border-line bg-surface px-3 py-2 text-ink focus-visible:outline-2 focus-visible:outline-accent;
+  }
+  .label {
+    @apply block text-sm font-medium;
+  }
+  .notice {
+    @apply rounded-md border px-3 py-2 text-sm;
+  }
+  .notice-success { @apply border-success text-success; }
+  .notice-info { @apply border-line text-muted; }
+  .notice-warning { @apply border-warning text-warning; }
+  .notice-danger { @apply border-danger text-danger; }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded-md focus:bg-panel focus:px-3 focus:py-2;
+  }
+}

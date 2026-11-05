@@ -1,0 +1,5 @@
+# Bundled SQLite build flags, read by libsqlite3-sys. Its defaults put every
+# connection's page cache and SQLite's memory statistics behind process-wide
+# mutexes, which serialize a pool serving requests in parallel. Neither is used.
+[env]
+LIBSQLITE3_FLAGS = "-USQLITE_ENABLE_MEMORY_MANAGEMENT -DSQLITE_DEFAULT_MEMSTATUS=0"

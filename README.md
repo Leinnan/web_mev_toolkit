@@ -17,6 +17,12 @@ Crates shared by Rust web apps on axum 0.8, Tera 2 and sqlx 0.9 with SQLite.
 
 Read [docs/crate-rules.md](docs/crate-rules.md) before adding a crate or a dependency, [docs/consuming.md](docs/consuming.md) for how an app uses these crates, and [docs/provenance.md](docs/provenance.md) for where the code came from.
 
+To start a new app:
+
+```sh
+cargo generate --path templates/app --name my_app --define toolkit_rev="$(git rev-parse HEAD)"
+```
+
 ## Commands
 
 ```sh

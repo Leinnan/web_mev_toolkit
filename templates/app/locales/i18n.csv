@@ -1,0 +1,35 @@
+key,Context,en,pl
+language_name,Shown on the language switch,English,Polski
+nav_home,,Home,Start
+nav_settings,,Settings,Ustawienia
+nav_logout,,Log out,Wyloguj
+skip_to_content,,Skip to content,Przejdź do treści
+field_email,,Email,E-mail
+field_display_name,,Your name,Twoje imię
+field_password,,Password,Hasło
+field_setup_token,,Setup token,Token konfiguracji
+login_title,,Log in,Logowanie
+login_submit,,Log in,Zaloguj się
+login_invalid,,Wrong email or password.,Nieprawidłowy e-mail lub hasło.
+login_locked,,Too many failed attempts. Try again later.,Zbyt wiele nieudanych prób. Spróbuj ponownie później.
+bootstrap_title,,Create the first account,Utwórz pierwsze konto
+bootstrap_hint,,The setup token is in the server log.,Token konfiguracji znajdziesz w logu serwera.
+bootstrap_submit,,Create account,Utwórz konto
+bootstrap_invalid_token,,That setup token is wrong.,Ten token konfiguracji jest nieprawidłowy.
+home_title,,Notes,Notatki
+home_new_note,,New note,Nowa notatka
+home_add,,Add,Dodaj
+home_empty,,No notes yet.,Nie ma jeszcze notatek.
+notes_count_one,,{n} note,{n} notatka
+notes_count_other,,{n} notes,
+notes_count_few,,,{n} notatki
+notes_count_many,,,{n} notatek
+note_added,,Note added.,Dodano notatkę.
+settings_title,,Settings,Ustawienia
+settings_password,,Change password,Zmień hasło
+settings_current_password,,Current password,Obecne hasło
+settings_new_password,,New password,Nowe hasło
+settings_save,,Change password,Zmień hasło
+settings_wrong_password,,Your current password is wrong.,Obecne hasło jest nieprawidłowe.
+password_changed,,Password changed. Log in again.,Hasło zmienione. Zaloguj się ponownie.
+password_length,,The password must have {min} to {max} characters.,Hasło musi mieć od {min} do {max} znaków.

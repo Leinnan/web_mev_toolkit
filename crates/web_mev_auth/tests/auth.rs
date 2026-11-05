@@ -327,6 +327,14 @@ async fn session_count(pool: &SqlitePool) -> i64 {
         .unwrap()
 }
 
+#[test]
+fn the_starter_ships_the_reference_sql() {
+    assert_eq!(
+        include_str!("../../../templates/app/migrations/0002_auth.sql"),
+        REFERENCE_SQL
+    );
+}
+
 #[tokio::test]
 async fn reference_sql_satisfies_the_schema_check() {
     let fixture = fixture(&DELETED_AT).await;

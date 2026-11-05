@@ -1,0 +1,72 @@
+set dotenv-load := true
+
+_list:
+    @just --list
+
+# Format, lints and a stale CSS check: run before every commit.
+check:
+    cargo fmt --all --check
+    cargo clippy --all-targets --all-features -- -D warnings
+    just css-check
+
+fix:
+    cargo fmt --all
+    cargo clippy --all-targets --all-features --fix --allow-dirty --allow-staged
+
+test *ARGS:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # Agents get the quiet profile, which prints only failures.
+    profile="default"
+    if [[ -n "${CLAUDECODE:-}" ]]; then profile="agent"; fi
+    if command -v cargo-nextest >/dev/null; then
+        cargo nextest run --profile "$profile" {{ARGS}}
+    else
+        cargo test {{ARGS}}
+    fi
+
+# Everything CI runs.
+verify: check test
+    cargo build --locked --profile dist
+
+# Serves the app. With .env copied from .env.example, it reads templates and static
+# files from disk, and reloads templates when they change.
+run:
+    cargo run --features reload
+
+# Regenerates src/static/app.css from styles/input.css and the templates.
+css:
+    scripts/tailwind.sh -i styles/input.css -o src/static/app.css --minify
+
+# Rebuilds the CSS on every change.
+css-watch:
+    scripts/tailwind.sh -i styles/input.css -o src/static/app.css --watch
+
+# Fails when src/static/app.css is stale.
+css-check:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tmp="$(mktemp)"
+    trap 'rm -f "$tmp"' EXIT
+    scripts/tailwind.sh -i styles/input.css -o "$tmp" --minify
+    cmp -s "$tmp" src/static/app.css || { echo "src/static/app.css is stale: run 'just css'"; exit 1; }
+
+docker-up:
+    docker compose up --build -d
+
+docker-down:
+    docker compose down
+
+logs:
+    docker compose logs --follow app
+
+# Cold backup: stops writes and archives the whole volume.
+backup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p backups
+    archive="backups/$(date -u +%Y%m%dT%H%M%SZ).tar.gz"
+    docker compose stop app
+    trap 'docker compose start app >/dev/null' EXIT
+    docker compose run --rm --no-deps --entrypoint sh app -c 'tar -C /data -czf - .' > "$archive"
+    printf '%s\n' "$archive"

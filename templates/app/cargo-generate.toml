@@ -1,0 +1,29 @@
+[template]
+# These hold `{{ }}` or `{ }` of their own, or are binary, and name nothing of the app.
+exclude = [
+    "justfile",
+    ".github/*",
+    ".github/**/*",
+    "src/templates/*",
+    "src/templates/**/*",
+    "src/static/*",
+    "src/static/**/*",
+    "styles/*",
+    "locales/*",
+    "scripts/*",
+]
+
+[placeholders.env_prefix]
+type = "string"
+prompt = "Prefix of the app's environment variables, without the trailing underscore"
+regex = "^[A-Z][A-Z0-9_]*$"
+default = "APP"
+
+[placeholders.toolkit_url]
+type = "string"
+prompt = "web_mev_toolkit git URL"
+default = "https://github.com/Leinnan/web_mev_toolkit"
+
+[placeholders.toolkit_rev]
+type = "string"
+prompt = "web_mev_toolkit rev (git rev-parse HEAD in the toolkit)"

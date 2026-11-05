@@ -1,0 +1,14 @@
+[profile.default]
+fail-fast = false
+
+# `just test` under an agent: only failures.
+[profile.agent]
+fail-fast = false
+status-level = "fail"
+final-status-level = "fail"
+failure-output = "immediate-final"
+success-output = "never"
+
+[profile.ci]
+fail-fast = false
+failure-output = "immediate-final"

@@ -7,7 +7,7 @@ check:
     cargo clippy --workspace --all-targets --all-features -- -D warnings
     scripts/check-boundaries.sh
 
-fix:
+fix: fmt-template
     cargo fmt --all
     cargo clippy --workspace --all-targets --all-features --fix --allow-dirty --allow-staged
 
@@ -37,6 +37,10 @@ check-alone:
 # Generates templates/app and runs its checks against this checkout.
 check-template:
     scripts/check-template.sh
+
+# Formats templates/app's Rust files, which hold placeholders rustfmt can't parse.
+fmt-template:
+    scripts/fmt-template.sh
 
 # Everything CI runs.
 ci: check check-alone test check-template

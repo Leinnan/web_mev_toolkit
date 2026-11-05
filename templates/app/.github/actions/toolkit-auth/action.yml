@@ -1,0 +1,25 @@
+# Lets this workflow fetch web_mev_toolkit while that repository is private. Remove
+# this action and its step in ci.yml if the repository is public.
+#
+# The token needs read access to Leinnan/web_mev_toolkit and nothing else.
+name: Toolkit auth
+description: Lets cargo fetch the private web_mev_toolkit git dependency
+inputs:
+  token:
+    description: Token with read access to the toolkit repository
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        TOKEN: ${{ inputs.token }}
+      run: |
+        if [[ -z "$TOKEN" ]]; then
+          echo "::error::the toolkit token is empty: is the secret set for this repository?"
+          exit 1
+        fi
+        git config --global \
+          "url.https://x-access-token:${TOKEN}@github.com/Leinnan/web_mev_toolkit.insteadOf" \
+          https://github.com/Leinnan/web_mev_toolkit
+        echo "CARGO_NET_GIT_FETCH_WITH_CLI=true" >> "$GITHUB_ENV"

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ t(key="login_title") }}{% endblock title %}
+{% block content %}
+<section class="card mx-auto max-w-sm">
+  <h1 class="text-xl font-semibold">{{ t(key="login_title") }}</h1>
+  {% if error %}<p class="notice notice-danger mt-4" role="alert">{{ error }}</p>{% endif %}
+  <form class="mt-4 space-y-4" action="/login" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div>
+      <label class="label" for="email">{{ t(key="field_email") }}</label>
+      <input class="input" id="email" type="email" name="email" value="{{ email | default(value="") }}" autocomplete="username" required autofocus>
+    </div>
+    <div>
+      <label class="label" for="password">{{ t(key="field_password") }}</label>
+      <input class="input" id="password" type="password" name="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn w-full" type="submit">{{ t(key="login_submit") }}</button>
+  </form>
+</section>
+{% endblock content %}

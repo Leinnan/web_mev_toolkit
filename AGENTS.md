@@ -17,6 +17,7 @@ just ci             # everything CI runs
 - Run one cargo command at a time, and never `cargo clean`.
 - Prefer `--workspace` over `-p` for tests: `-p` changes feature unification and forces rebuilds.
 - Apps pin revs, so a breaking change here reaches an app only when it moves its pin. Add the note to `docs/consuming.md` when a change needs edits in apps.
+- After changing `templates/app`, run `just fmt-template`, and `just css` in a generated app if classes changed. `crates/web_mev_auth/sql/auth_tables.sql` and `templates/app/migrations/0002_auth.sql` must stay identical, which a test checks.
 - Add a new crate to the lists in `scripts/check-boundaries.sh` and the table in `README.md` when you add it to `crates/`, and record its sources in `docs/provenance.md`.
 - Cookie names, env prefixes, CSP sources, paths and app names come from the app. Never hard-code one in a crate.
 - A security fix gets a regression test, and a line under "Bugs fixed while porting" in `docs/provenance.md` when the source apps still have the bug.

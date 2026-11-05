@@ -1,0 +1,10 @@
+# {{project-name}}
+
+```sh
+cp .env.example .env
+just run
+```
+
+On the first start the log prints a setup token. Open http://127.0.0.1:8080 and use it to create the first account.
+
+See [AGENTS.md](AGENTS.md) for commands and layout. To run it in Docker, use `just docker-up`, which keeps its data in a volume, and set `{{env_prefix}}_COOKIE_SECURE=true` once it's behind HTTPS.

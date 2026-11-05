@@ -1,0 +1,13 @@
+{% if notes | length > 0 %}
+<p class="text-sm text-muted">{{ t(key="notes_count", n=notes | length) }}</p>
+<ul class="mt-2 space-y-2">
+  {% for note in notes %}
+  <li class="card py-4">
+    <p class="break-words whitespace-pre-wrap">{{ note.body }}</p>
+    <time class="mt-2 block text-xs text-muted" datetime="{{ note.created_at | iso }}">{{ note.created_at | utc }}</time>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted">{{ t(key="home_empty") }}</p>
+{% endif %}

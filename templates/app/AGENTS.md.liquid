@@ -1,0 +1,34 @@
+# {{project-name}}: agent guide
+
+An axum 0.8 app on Tera 2, sqlx 0.9 with SQLite, htmx and Tailwind v4. Shared code comes from `web_mev_toolkit`, pinned by rev. Its `docs/consuming.md` covers access and trying local changes.
+
+## Commands
+
+| Task | Command |
+|---|---|
+| Serve, reading templates and static files from disk | `just run` |
+| Format, clippy `-D warnings`, stale CSS check | `just check`: must pass before every commit |
+| Tests | `just test` |
+| Everything CI runs | `just verify` |
+| Rebuild CSS after changing classes | `just css` |
+
+## Rules
+
+- Run one cargo command at a time, and never `cargo clean`.
+- Change data through a form type wrapped in `CsrfForm`, and in `AnonForm` when there is no session yet. Never read a body and check CSRF by hand.
+- Do a change and its audit entry in one `write_tx`, and send cookies only after the commit.
+- Text shown to people lives only in `locales/i18n.csv`, in every language.
+- Never use `| safe` on anything that holds user input. The CSP forbids inline scripts and styles, so behaviour goes in `src/static/app.js`.
+- Copy no secret into a log, and keep them out of `Debug` output, as `Config` does.
+- Add a migration for every schema change. Applied migrations don't change. `web_mev_auth`'s tables must keep passing `verify_schema`.
+- Record decisions that would surprise a newcomer in `docs/adr/`.
+
+## Layout
+
+- `src/lib.rs`: `run` and the router.
+- `src/config.rs`: settings from the environment. `src/state.rs`: what handlers share.
+- `src/error.rs`: `AppError`, the HTML error page and the JSON `ApiError`.
+- `src/user.rs`: how `web_mev_auth` reads `users`. `src/i18n.rs`: the request's language and the `t` template function.
+- `src/routes.rs`: handlers.
+- `src/templates/`, `src/static/`: embedded in the binary. `styles/input.css` builds `src/static/app.css`.
+- `tests/app.rs`: the app end to end through its real router.

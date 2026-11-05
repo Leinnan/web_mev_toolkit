@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ t(key="settings_title") }}{% endblock title %}
+{% block content %}
+<h1 class="text-2xl font-semibold">{{ t(key="settings_title") }}</h1>
+<section class="card mt-6 max-w-md">
+  <h2 class="text-lg font-semibold">{{ t(key="settings_password") }}</h2>
+  {% if error %}<p class="notice notice-danger mt-4" role="alert">{{ error }}</p>{% endif %}
+  <form class="mt-4 space-y-4" action="/settings/password" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div>
+      <label class="label" for="current_password">{{ t(key="settings_current_password") }}</label>
+      <input class="input" id="current_password" type="password" name="current_password" autocomplete="current-password" required>
+    </div>
+    <div>
+      <label class="label" for="new_password">{{ t(key="settings_new_password") }}</label>
+      <input class="input" id="new_password" type="password" name="new_password" autocomplete="new-password" required>
+    </div>
+    <button class="btn" type="submit">{{ t(key="settings_save") }}</button>
+  </form>
+</section>
+{% endblock content %}

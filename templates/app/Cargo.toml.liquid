@@ -1,0 +1,62 @@
+[package]
+name = "{{project-name}}"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+publish = false
+
+[features]
+# Reloads templates from a directory source when they change, for development.
+reload = ["web_mev_templates/reload"]
+
+[dependencies]
+axum = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio", "sqlite", "migrate", "macros", "derive"] }
+tera = { version = "2", features = ["glob_fs"] }
+thiserror = "2"
+include_dir = "0.7"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "sync", "time", "fs"] }
+tower-cookies = "0.11"
+tracing = "0.1"
+web_mev_assets = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}", features = ["axum"] }
+web_mev_auth = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+web_mev_axum = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+web_mev_core = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+web_mev_i18n = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+web_mev_runtime = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+web_mev_sqlite = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+web_mev_templates = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+
+[dev-dependencies]
+web_mev_test = { git = "{{toolkit_url}}", rev = "{{toolkit_rev}}" }
+
+# Our code quick to rebuild, dependencies fast at run time.
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+debug = "line-tables-only"
+
+# Shipping profile: abort on panic for a smaller binary. Tests can't use it,
+# because the test harness needs unwinding.
+[profile.dist]
+inherits = "release"
+panic = "abort"
+lto = "thin"
+
+# Panics are denied in production code. clippy.toml exempts tests.
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+redundant_clone = "warn"
+needless_collect = "warn"
+or_fun_call = "warn"
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
